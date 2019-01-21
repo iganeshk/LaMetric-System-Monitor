@@ -7,6 +7,11 @@
 import time
 import requests
 import json
+import yaml
+
+# load up secrets file to get config
+# with open("secrets.yaml") as secrets_file:
+#     secrets = yaml.safe_load(secrets_file)
 
 OPENHARDWAREMONITOR_URL = "YOUR_COMPUTER_IP:8085/data.json"
 TIMEOUT = 1
@@ -14,12 +19,18 @@ LA_TOKEN = "YOUR_APP_TOKEN"
 LA_PUSH_URL_LOCAL = "YOUR_LOCAL_PUSH_URL"
 HEADERS = {'Accept': 'application/json', 'X-Access-Token': LA_TOKEN, "Cache-Control": "no-cache"}
 
-# Thresholds for Dynamic Icons
+# Temperature thresholds for dynamic Icons
 ICON_THRESHOLD_TEMP_HOT = "70"
 ICON_THRESHOLD_TEMP_COLD = "45"
 
 
-def push_hwinfo():
+def push_hwinfo(json_data):
+    # disable warning about the certificate for local push
+    requests.packages.urllib3.disable_warnings()
+    response = requests.post(LA_PUSH_URL_LOCAL, data=json.dumps(json_data), headers=HEADERS, verify=False)
+
+
+def parse_ohm():
     # get the data from open hardware monitor (make sure port 8085 is open on windows firewall)
     try:
         json_data = requests.get(OPENHARDWAREMONITOR_URL, verify=False, timeout=5).json()
@@ -45,14 +56,16 @@ def push_hwinfo():
             gpu_icon = "a26357"
         json_data = {"frames": [{"text": "CPU " + cpu_temp + "°", "icon": cpu_icon},
                                 {"text": "GPU " + gpu_temp + "°", "icon": gpu_icon}]}
-
-    # catch timeouts and connection error and display as offline
-    except (requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError, requests.exceptions.ReadTimeout):
+        push_hwinfo(json_data)
+        # catch timeouts and report offline to Time
+    except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
         json_data = {"frames": [{"text": "CPU OFFLINE", "icon": "a22294"},
                                 {"text": "GPU OFFLINE", "icon": "a22294"}]}
-    requests.packages.urllib3.disable_warnings()
-    response = requests.post(LA_PUSH_URL_LOCAL, data=json.dumps(json_data), headers=HEADERS, verify=False)
-    # print(response)
+        push_hwinfo(json_data)
+    # exit if unable to reach Time
+    except requests.exceptions.ConnectionError:
+        print("Unable to reach LaMetric Time, check your connection")
+        exit(1)
 
 
 if __name__ == '__main__':
