@@ -7,7 +7,7 @@
 import time
 import requests
 import json
-import yaml
+# import yaml
 
 # load up secrets file to get config
 # with open("secrets.yaml") as secrets_file:
@@ -44,13 +44,13 @@ def parse_ohm():
         # change icon between hot and cold based on the threshold set
         if(cpu_temp < ICON_THRESHOLD_TEMP_COLD):
             cpu_icon = "a26356"
-        elif(cpu_temp > ICON_THRESHOLD_TEMP_COLD and cpu_temp < ICON_THRESHOLD_TEMP_HOT):
+        elif(cpu_temp >= ICON_THRESHOLD_TEMP_COLD and cpu_temp <= ICON_THRESHOLD_TEMP_HOT):
             cpu_icon = "a26358"
         else:
             cpu_icon = "a26357"
         if(gpu_temp < ICON_THRESHOLD_TEMP_COLD):
             gpu_icon = "a26356"
-        elif(gpu_temp > ICON_THRESHOLD_TEMP_COLD and gpu_temp < ICON_THRESHOLD_TEMP_HOT):
+        elif(gpu_temp >= ICON_THRESHOLD_TEMP_COLD and gpu_temp <= ICON_THRESHOLD_TEMP_HOT):
             gpu_icon = "a26358"
         else:
             gpu_icon = "a26357"
