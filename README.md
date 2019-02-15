@@ -34,8 +34,7 @@ This utility parses the OpenHardwareMonitor's data from the remote webserver and
 
 #### Usage
 
-```python3 lametric_ohm.py
-```
+`python3 lametric_ohm.py`
 
 #### Installation (systemd service for Linux Environment)
 
