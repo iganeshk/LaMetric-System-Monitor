@@ -1,26 +1,27 @@
 <h1 align="center">
-  <a href="https://github.com/iganeshk/LaMetric-OpenHardwareMonitor/" title="LaMetric OpenHardwareMonitor">
-    <img alt="LaMetric-OpenHardwareMonitor" src="https://github.com/iganeshk/LaMetric-OpenHardwareMonitor/raw/master/demo.gif" width="80%" />
+  <a href="https://github.com/iganeshk/LaMetric-System-Monitor/" title="LaMetric LaMetric System Monitor">
+    <img alt="LaMetric-System-Monitor" src="https://github.com/iganeshk/LaMetric-System-Monitor/raw/master/demo.gif" width="80%" />
   </a>
   <br />
-  LaMetric OpenHardwareMonitor
+  LaMetric System Monitor
 </h1>
 
 <p align="center">
-  Monitor your CPU and GPU temperature on Time
+  Monitor your system vitals (Windows) on Lametric's Time.
 </p>
 
 <br />
 
-## What is LaMetric OpenHardwareMonitor?
+## What is LaMetric System Monitor?
 
-This utility parses the OpenHardwareMonitor's data from the remote webserver and pushes it to LaMetric Time via an Indicator App.
+This utility parses the LibreHardwareMontior's data from it's remote webserver and pushes it to LaMetric Time via an Indicator App.
 
 ## How to Use
 
 #### Requirements
 
 * LaMetric Developer Account with Time registered (Sign up here: [https://developer.lametric.com](https://developer.lametric.com/))
+* LibreHardwareMonitor (OpenHardwareMonitor fork): [https://ci.appveyor.com/project/LibreHardwareMonitor/librehardwaremonitor](https://ci.appveyor.com/project/LibreHardwareMonitor/librehardwaremonitor)
 * [Python3](https://www.python.org/download/releases/3.0/)
 * Python3 modules: requests, json and yaml (integration with home assistant)
 
@@ -43,7 +44,7 @@ This utility parses the OpenHardwareMonitor's data from the remote webserver and
 
 ```
 [Unit]
-Description=Lametric Time OpenHardwareMonitor Screen
+Description=Lametric Time System Monitor Screen
 After=syslog.target network-online.target
 
 [Service]

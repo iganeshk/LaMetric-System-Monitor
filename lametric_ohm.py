@@ -36,6 +36,9 @@ def parse_ohm():
         json_data = requests.get(OPENHARDWAREMONITOR_URL, verify=False, timeout=5).json()
 
         # parse data to get cpu package temperature (this key is for package value)
+        cpu_vcore = json_data['Children'][0]['Children'][0]['Children'][0]['Children'][0]['Children'][0]['Value'][:4]
+
+        # parse data to get cpu package temperature (this key is for package value)
         cpu_temp = json_data['Children'][0]['Children'][1]['Children'][1]['Children'][6]['Value'][:2]
 
         # parse data to get gpu package temperature (this key is for package value)
@@ -55,24 +58,27 @@ def parse_ohm():
         else:
             gpu_icon = "a26357"
         json_data = {"frames": [{"text": "CPU " + cpu_temp + "°", "icon": cpu_icon},
-                                {"text": "GPU " + gpu_temp + "°", "icon": gpu_icon}]}
+                                {"text": "GPU " + gpu_temp + "°", "icon": gpu_icon},
+                                {"text": "VC " + cpu_vcore, "icon": "a27512"}]}
         push_hwinfo(json_data)
         # catch timeouts and report offline to Time
     except (requests.exceptions.ConnectTimeout, requests.exceptions.ReadTimeout):
-        json_data = {"frames": [{"text": "CPU OFFLINE", "icon": "a22294"},
-                                {"text": "GPU OFFLINE", "icon": "a22294"}]}
+        json_data = {"frames": [{"text": "SYSTEM OFFLINE", "icon": "a27513"}]}
+        # json_data = {"frames": [{"text": "SYSTEM OFFLINE", "icon": "a22294"}]}
         push_hwinfo(json_data)
     # exit if unable to reach Time
+    except (ValueError, IndexError):
+        print("Unable to fetch CPU/GPU Temperature, check the json to fix the keys.")
     except requests.exceptions.ConnectionError:
         print("Unable to reach LaMetric Time, check your connection")
-        exit(1)
+    # exit(1)
 
 
 if __name__ == '__main__':
     try:
         while True:
             timed_start = time.time()
-            push_hwinfo()
+            parse_ohm()
             # print("tick")
             time.sleep(TIMEOUT)
     except KeyboardInterrupt:
