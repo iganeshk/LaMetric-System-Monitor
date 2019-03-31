@@ -7,11 +7,7 @@
 import time
 import requests
 import json
-# import yaml
-
-# load up secrets file to get config
-# with open("secrets.yaml") as secrets_file:
-#     secrets = yaml.safe_load(secrets_file)
+from collections import OrderedDict
 
 # Configurables
 OPENHARDWAREMONITOR_URL = "YOUR_COMPUTER_IP:8085/data.json"
