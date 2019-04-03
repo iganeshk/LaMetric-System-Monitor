@@ -1,7 +1,7 @@
 #!/usr/bin/env/ python3
 # coding=utf-8
 #
-# Parse OpenHardwareMonitor's Remote Data (JSON) and publish it to LaMetric
+# Parse HWiNFO's Remote Data (JSON UTF-8) and publish it to LaMetric
 # Ganesh Velu
 
 import time
@@ -10,7 +10,7 @@ import json
 from collections import OrderedDict
 
 # Configurables
-OPENHARDWAREMONITOR_URL = "YOUR_COMPUTER_IP:8085/data.json"
+REMOTE_MONITOR_URL = "YOUR_COMPUTER_IP:8085/data.json"
 LA_TOKEN = "YOUR_APP_TOKEN"
 LA_PUSH_URL_LOCAL = "YOUR_LOCAL_PUSH_URL"
 
@@ -35,7 +35,7 @@ SENSORS_INDEX = {}
 def scan_values():
     global SENSORS_INDEX
     print("Scanning for Sensors...")
-    json_data = requests.get(OPENHARDWAREMONITOR_URL, verify=False, timeout=5).json()
+    json_data = requests.get(REMOTE_MONITOR_URL, verify=False, timeout=5).json()
     for i in range(0, len(json_data['hwinfo']['readings'])):
         for sensor in SENSORS:
             if json_data['hwinfo']['readings'][i]['labelOriginal'] == sensor:
@@ -67,9 +67,10 @@ def parse_ohm():
             FIRSTRUN[0] = False
             scan_values()
 
-        json_data = requests.get(OPENHARDWAREMONITOR_URL + '?enable=' + ','.join(str(sensor) for sensor in SENSORS.values()), verify=False, timeout=3).json()
+        # Get only data for the sensors indexed
+        json_data = requests.get(REMOTE_MONITOR_URL + '?enable=' + ','.join(str(sensor) for sensor in SENSORS.values()), verify=False, timeout=3).json()
 
-        # parse data to get appropriate values
+        # parse data to get appropriate sensor values
 
         # CPU Package Temperature
         cpu_temp = json_data['hwinfo']['readings'][SENSORS_INDEX['CPU Package']]['value']
@@ -84,13 +85,13 @@ def parse_ohm():
         coolant_temp = json_data['hwinfo']['readings'][SENSORS_INDEX['T_Sensor1']]['value']
 
         # change icon between hot and cold based on the threshold set
-        if(cpu_temp < ICON_THRESHOLD_TEMP_COLD):
+        if(cpu_temp <= ICON_THRESHOLD_TEMP_COLD):
             cpu_icon = "a26356"
         elif(cpu_temp >= ICON_THRESHOLD_TEMP_COLD and cpu_temp <= ICON_THRESHOLD_TEMP_HOT):
             cpu_icon = "a26358"
         else:
             cpu_icon = "a26357"
-        if(gpu_temp < ICON_THRESHOLD_TEMP_COLD):
+        if(gpu_temp <= ICON_THRESHOLD_TEMP_COLD):
             gpu_icon = "a26356"
         elif(gpu_temp >= ICON_THRESHOLD_TEMP_COLD and gpu_temp <= ICON_THRESHOLD_TEMP_HOT):
             gpu_icon = "a26358"
