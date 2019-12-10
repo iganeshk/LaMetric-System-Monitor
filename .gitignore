@@ -1,6 +1,8 @@
-README.html
-demo_v1.gif
-demo_v2.gif
+# locally ignored
+resources/demo_v1.gif
+resources/demo_v2.gif
+.travis.yml
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
