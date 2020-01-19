@@ -1,6 +1,6 @@
 <h2 align="center">
   <a href="https://github.com/iganeshk/LaMetric-System-Monitor/" title="LaMetric LaMetric System Monitor">
-    <img alt="LaMetric-System-Monitor" src="https://github.com/iganeshk/LaMetric-System-Monitor/raw/master/resources/demo.gif" width="80%" />
+    <img alt="LaMetric-System-Monitor" src="../assets/demo.gif?raw=true" width="80%" />
   </a>
   <br />
   LaMetric System Monitor
