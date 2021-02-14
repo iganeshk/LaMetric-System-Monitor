@@ -38,7 +38,7 @@ HEADERS = {
 }
 FIRSTRUN = [True]
 SENSORS_INDEX = {}
-REMOTE_MONITOR_URL = ("%s:%s/json.json")
+REMOTE_MONITOR_URL = ("http://%s:%s/json.json" % (REMOTE_MONITOR_IP, REMOTE_MONITOR_PORT))
 
 
 class HolUp(Exception):
